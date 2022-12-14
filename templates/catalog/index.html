@@ -1,0 +1,27 @@
+{% extends "base_site.html" %}
+{% load static %}
+{% load cache %}
+
+{% block content %}
+  <h1>Figs statistics</h1>
+
+
+  <div>
+    <img src="{% static "images/field.gif" %}" alt="My image" style="height:245px;"/>
+  </div>
+
+
+  {% cache 10 num_users num_quotes %}
+  <h2>Dynamic content</h2>
+
+  <p>The statistics of site "Figs" :</p>
+  <ul>
+    <li><strong>Users:</strong> {{ num_users }}</li>
+    <li><strong>Quotes:</strong> {{ num_quotes }}</li>
+  </ul>
+  {% endcache %}
+
+
+  You have visited this page {{ num_visits }} time{% if num_visits > 1 %}s{% endif %}.
+
+{% endblock %}

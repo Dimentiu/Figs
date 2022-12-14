@@ -1,0 +1,47 @@
+{% extends "base_site.html" %}
+
+{% block content %}
+    <h1>{{ post.heading }}</h1>
+    <ul>Description: {{ post.description }}</ul>
+    <ul>Message: {{ post.message }} </ul>
+    <ul><img src='/{{ post.image }}' alt="Image" width="200" height="200"></ul>
+    <ul>Author:<a href="{% url 'detail_user' id=post.author.id %}">{{ post.author }}</a></ul>
+    {% with comments.count as total_comments %}
+    <h2>
+        {{ total_comments }} comments:
+    </h2>
+    {% endwith %}
+    <div class="pagination">
+    <span class="step-links">
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+     {% for comment in page_obj %}
+        <p class="info">
+            {{ forloop.counter }} {{ comment.text }} by {{ comment.name }}
+            {{ comment.created }}
+        </p>
+        {{ comment.body|linebreaks }}
+{% empty %}
+    <p>There are no comments yet</p>
+{% endfor %}
+      {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">|<|</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">|>|</a>
+        {% endif %}
+    </span>
+</div>
+    <div class="comment"></div>
+    {% if new_comment %}
+    <li>Your comment has been added</li>
+        {% else %}
+    <h2>Add a new comment</h2>
+    <form action="" method="POST">
+    {% csrf_token %}
+         {{ comment_form.as_p }}
+        <p><input type="submit" value="Add comment"></p>
+    </form>
+{% endif %}
+{% endblock %}
